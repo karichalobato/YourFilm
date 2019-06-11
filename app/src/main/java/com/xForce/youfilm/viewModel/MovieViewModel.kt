@@ -19,7 +19,7 @@ class MovieViewModel {
         var getAllMovies: LiveData<List<Movie>>
 
         init {
-            val movieDAO = movieRoomDataBase.getInstance(app).movieDao()
+            val movieDAO = movieRoomDataBase.getDatabase(app).movieDao()
 
             repository = movieRepository(movieDAO)
             getAllMovies = repository.AllMoview
