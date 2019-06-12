@@ -94,7 +94,7 @@
                     android:layout_weight="1"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
-
+                    android:id="@+id/movie_year"
                     android:text="Año:"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -161,7 +161,7 @@
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
 
-                    android:text="Genero:"
+                    android:text="Genre:"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -227,7 +227,7 @@
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
 
-                    android:text="Actores:"
+                    android:text="Actors:"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
