@@ -1,6 +1,7 @@
 package com.xForce.youfilm.fragments
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.xForce.youfilm.R
 import com.xForce.youfilm.activities.ActivityHelper
@@ -33,6 +35,10 @@ class MainListFragment : Fragment() {
 
         if(activityHelper.internetIsAvailable()){
             movieInfoViewModel.retreiveMovie(imdbID)
+            if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT){
+                val nextAction = MainListFragmentDirections.nextAction()
+                view.findNavController().navigate(nextAction)
+            }
         }
         else activityHelper.showToast("No internet connection!!")
 
