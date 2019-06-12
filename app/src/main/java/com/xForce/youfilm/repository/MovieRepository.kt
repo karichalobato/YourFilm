@@ -13,6 +13,7 @@ class MovieRepository (private val movieDao: MovieDAO ) {
 
     fun getMovieById(id:String) = movieDao.getMovieById(id)
 
+    fun getAllMovies():LiveData<Movie> = movieDao.getAllMovies()
 
     @WorkerThread
     suspend fun deleteMovies() = movieDao.deleteMovies()

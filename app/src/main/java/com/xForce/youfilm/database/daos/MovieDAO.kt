@@ -16,11 +16,12 @@ interface MovieDAO {
     @Query("SELECT * FROM Movie WHERE title==:title")
     fun getMovieByTitle(title:String): LiveData<List<Movie>>
 
+    @Query("select * from movie")
+    fun getAllMovies():LiveData<Movie>
+
     @Query("select * from movie where imdbID = :id")
     fun getMovieById(id:String):LiveData<Movie>
 
-    @Query("SELECT * FROM Movie")
-    fun getAllMovies():LiveData<List<Movie>>
 
     @Query("DELETE FROM Movie")
     fun deleteMovies()

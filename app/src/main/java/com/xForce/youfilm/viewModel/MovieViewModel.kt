@@ -3,6 +3,8 @@ package com.xForce.youfilm.viewModel
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.xForce.youfilm.Service.retrofit.MovieService
 import com.xForce.youfilm.database.entities.Movie
@@ -18,7 +20,7 @@ class MovieViewModel(app: Application) : AndroidViewModel(app) {
     private val movieRepository: MovieRepository
     private val movieInfoRepository: MovieInfoRepository
 
-    //private lateinit var scope: CoroutineScope
+    val listenedMovie:LiveData<Movie>
 
     init {
         val movieDAO = MovieRoomDatabase.getDatabase(app,viewModelScope).movieDao()
@@ -28,6 +30,7 @@ class MovieViewModel(app: Application) : AndroidViewModel(app) {
         movieRepository = MovieRepository(movieDAO)
         movieInfoRepository = MovieInfoRepository(movieInfoDao)
 
+        listenedMovie = movieRepository.getAllMovies()
     }
 
     fun retreiveAllMovieList() = viewModelScope.launch(Dispatchers.IO) {
@@ -40,14 +43,14 @@ class MovieViewModel(app: Application) : AndroidViewModel(app) {
                 with(response) {
                     this.body()?.results?.forEach {
                         insertMovieInfo(it)
-                        /*val movieResponse =
+                        val movieResponse =
                             MovieService.getMovieService().retreiveMovieById(it.imdbID, MovieService.API_KEY).await()
                         if (movieResponse.isSuccessful) {
                             with(movieResponse) {
                                 //                                    Log.d("CUSTOM",this.body()!!.Plot)
                                 movieRepository.insertMovie(this.body()!!)
                             }
-                        }*/
+                        }
                     }
                 }
             } else Log.d("CUSTOM", "shit")
@@ -62,19 +65,6 @@ class MovieViewModel(app: Application) : AndroidViewModel(app) {
     }
 
 
-    fun retreiveMovie(imdbID:String) = viewModelScope.launch (Dispatchers.IO){
-
-        val response = MovieService.getMovieService().retreiveMovieById(imdbID, MovieService.API_KEY).await()
-        if(response.isSuccessful){
-            with(response){
-                val id = movieRepository.insertMovie(this.body()!!)
-                Log.d("CUSTOM",id.toString())
-            }
-        }
-
-    }
-
-
     fun getAllMovieInfo() = movieInfoRepository.getAllMovieInfo()
 
     fun getMovieById(id: String) = movieRepository.getMovieById(id)
@@ -82,9 +72,6 @@ class MovieViewModel(app: Application) : AndroidViewModel(app) {
 
     fun getMoviesByTittle(tittle: String) = movieInfoRepository.getMoviesByTitle(tittle)
 
-    fun insertMovie(movie: Movie) = viewModelScope.launch(Dispatchers.IO) {
-        movieRepository.insertMovie(movie)
-    }
 
     fun insertMovieInfo(movieInfo: MovieInfo) = viewModelScope.launch(Dispatchers.IO) {
 
@@ -92,8 +79,5 @@ class MovieViewModel(app: Application) : AndroidViewModel(app) {
     }
 
 
-    fun deleteMovie(imdbID: String) = viewModelScope.launch (Dispatchers.IO){
-        movieRepository.deleteMovie(imdbID)
-    }
 
 }

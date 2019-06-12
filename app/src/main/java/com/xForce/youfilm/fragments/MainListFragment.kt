@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.xForce.youfilm.R
@@ -34,15 +35,20 @@ class MainListFragment : Fragment() {
 //        Log.d("CUSTOM",imdbID)
 
         if(activityHelper.internetIsAvailable()){
-            movieInfoViewModel.retreiveMovie(imdbID)
+
             if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT){
-                val nextAction = MainListFragmentDirections.nextAction()
+                val nextAction = MainListFragmentDirections.nextAction(imdbID)
                 view.findNavController().navigate(nextAction)
             }
         }
+
         else activityHelper.showToast("No internet connection!!")
 
     }
+
+
+
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         activityHelper = context as ActivityHelper
@@ -66,6 +72,9 @@ class MainListFragment : Fragment() {
 
         movieInfoViewModel = ViewModelProviders.of(this).get(MovieViewModel::class.java)
 
+        /*movieInfoViewModel.insertedId.observe(this, Observer {
+            Log.d("CUSTOM",it.toString())
+        })*/
         movieInfoViewModel.getAllMovieInfo().observe(this, Observer {
             if (it.isEmpty()) {
                 /*
@@ -90,6 +99,7 @@ class MainListFragment : Fragment() {
                 })
             }
         }
+
 
         return view
     }

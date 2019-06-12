@@ -47,13 +47,14 @@ public abstract class MovieRoomDatabase : RoomDatabase() {
                 super.onOpen(db)
                 INSTANCE?.let { database ->
                     scope.launch(Dispatchers.IO) {
-                        populateDB(database.movieInfoDao())
+                        populateDB(database.movieInfoDao(),database.movieDao())
                     }
                 }
             }
 
-            suspend fun populateDB(movieInfoDao: MovieInfoDao) {
+            suspend fun populateDB(movieInfoDao: MovieInfoDao,movieDAO: MovieDAO) {
                 movieInfoDao.deleteAll()
+                movieDAO.deleteMovies()
             }
         }
     }
