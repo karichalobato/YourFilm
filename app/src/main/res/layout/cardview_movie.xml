@@ -11,7 +11,7 @@
         <ImageView
                 android:id="@+id/movie_image_cv"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="250dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_launcher_background" />
 
@@ -61,7 +61,7 @@
 
                 android:orientation="vertical">
 
-            <TextView
+           <!-- <TextView
                     android:id="@+id/movie_plot_cv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:gravity="end"
-                    android:text="@string/runtime_ex_string" />
+                    android:text="@string/runtime_ex_string" />-->
 
         </LinearLayout>
 

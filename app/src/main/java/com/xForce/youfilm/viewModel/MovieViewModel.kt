@@ -1,37 +1,81 @@
 package com.xForce.youfilm.viewModel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
+import com.xForce.youfilm.Service.retrofit.MovieService
 import com.xForce.youfilm.database.entities.Movie
-import com.xForce.youfilm.database.movieRoomDataBase
-import com.xForce.youfilm.repository.movieRepository
+import com.xForce.youfilm.database.entities.MovieInfo
+import com.xForce.youfilm.database.MovieRoomDatabase
+import com.xForce.youfilm.repository.MovieInfoRepository
+import com.xForce.youfilm.repository.MovieRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class MovieViewModel {
-    class MovieViewModel(app: Application) : AndroidViewModel(app) {
+class MovieViewModel(app: Application) : AndroidViewModel(app) {
 
-        val repository: movieRepository
+    private val movieRepository: MovieRepository
+    private val movieInfoRepository: MovieInfoRepository
 
-        //private lateinit var scope: CoroutineScope
-        var getAllMovies: LiveData<List<Movie>>
+    //private lateinit var scope: CoroutineScope
 
-        init {
-            val movieDAO = movieRoomDataBase.getDatabase(app).movieDao()
+    init {
+        val movieDAO = MovieRoomDatabase.getDatabase(app).movieDao()
+        val movieInfoDao = MovieRoomDatabase.getDatabase(app).movieInfoDao()
 
-            repository = movieRepository(movieDAO)
-            getAllMovies = repository.AllMoview
-        }
 
-        suspend fun getMoviesByTittle(tittle: String) = repository.getMovieByTitle(tittle)
-
-        fun insertMovie(movie: Movie) = viewModelScope.launch(Dispatchers.IO) {
-            repository.insertMovie(movie)
-        }
-
-        suspend fun deleteMovies() = repository.deleteMovies()
+        movieRepository = MovieRepository(movieDAO)
+        movieInfoRepository = MovieInfoRepository(movieInfoDao)
 
     }
+
+    fun retreiveAllMovieList() = viewModelScope.launch(Dispatchers.IO) {
+        //        Log.d("CUSTOM","called")
+        try {
+            val response =
+                MovieService.getMovieService().retreiveAllMovies("Spider-Man", "movie", 1, MovieService.API_KEY).await()
+            if (response.isSuccessful) {
+
+                with(response) {
+                    this.body()?.results?.forEach {
+                        insertMovieInfo(it)
+                        val movieResponse =
+                            MovieService.getMovieService().retreiveMovieById(it.imdbID, MovieService.API_KEY).await()
+                        if (movieResponse.isSuccessful) {
+                            with(movieResponse) {
+                                //                                    Log.d("CUSTOM",this.body()!!.Plot)
+                                movieRepository.insertMovie(this.body()!!)
+                            }
+                        }
+                    }
+                }
+            } else Log.d("CUSTOM", "shit")
+        } catch (e: Exception) {
+            Log.e("CUSTOM", e.toString())
+        }
+//        }
+//        else{
+//            isFullLiveData.postValue(true)
+//        }
+
+    }
+
+    fun getAllMovieInfo() = movieInfoRepository.getAllMovieInfo()
+
+    fun getMovieById(id: String) = movieRepository.getMovieById(id)
+
+
+    fun getMoviesByTittle(tittle: String) = movieInfoRepository.getMoviesByTitle(tittle)
+
+    fun insertMovie(movie: Movie) = viewModelScope.launch(Dispatchers.IO) {
+        movieRepository.insertMovie(movie)
+    }
+
+    fun insertMovieInfo(movieInfo: MovieInfo) = viewModelScope.launch(Dispatchers.IO) {
+
+        movieInfoRepository.insertMovieInfo(movieInfo)
+    }
+
+
 }

@@ -1,8 +1,8 @@
 package com.xForce.youfilm.fragments
 
-import com.xForce.youfilm.database.entities.Movie
+import androidx.fragment.app.Fragment
 
-class MainContentFragment {
+class MainContentFragment :Fragment(){
 
 
 

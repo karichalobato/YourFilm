@@ -1,27 +1,42 @@
 package com.xForce.youfilm.database.entities
 
 import androidx.room.*
+import com.squareup.moshi.Json
 
-@Entity(indices = [Index("Title")],
-    tableName = "Movie")
+@Entity(tableName = "movie")
+
 
 data class Movie (
 
-    @ColumnInfo(name = "Title")
-    val title: String,
-    @ColumnInfo(name = "Realeased")
-    val realeased: String,
-    @ColumnInfo(name = "Runtime")
-    val runtime: String,
-    @ColumnInfo(name = "Genre")
-    val genre: String,
-    @ColumnInfo(name = "Director")
-    val director: String,
-    @ColumnInfo(name = "Actors")
-    val actors: String
-)
+        @field:Json(name = "imdbID")
+        @PrimaryKey
+        var imdbID:String,
 
-{
-    @PrimaryKey(autoGenerate = true)
-    var idMovie: Int = 0
-}
+        @field:Json(name = "Title")
+        @ColumnInfo(name = "title")
+        val Title: String,
+
+        @field:Json(name = "Year")
+        @ColumnInfo(name = "year")
+        val Year: String,
+
+        @field:Json(name = "Released")
+        @ColumnInfo(name = "released")
+        val Released: String,
+
+        @field:Json(name = "Genre")
+        @ColumnInfo(name = "genre")
+        val Genre: String,
+
+        @field:Json(name = "Director")
+        @ColumnInfo(name = "director")
+        val Director: String,
+
+        @field:Json(name = "Runtime")
+        @ColumnInfo(name = "runtime")
+        val Runtime: String,
+
+        @field:Json(name = "Plot")
+        @ColumnInfo(name = "plot")
+        val Plot: String
+)

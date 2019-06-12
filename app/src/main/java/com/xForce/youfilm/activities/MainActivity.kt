@@ -3,10 +3,14 @@ package com.xForce.youfilm.activities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.FrameLayout
+import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.xForce.youfilm.R
 import com.xForce.youfilm.fragments.MainListFragment
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),ActivityHelper {
+
 
     var listaFragment = MainListFragment()
 
@@ -14,12 +18,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if(findViewById<FrameLayout>(R.id.ContenedorFragments) != null){
-            if(savedInstanceState != null){
-
-            }
-            supportFragmentManager.beginTransaction().replace(R.id.ContenedorFragments,listaFragment).commit()
-        }
-
     }
+    override fun getLayoutManager(): RecyclerView.LayoutManager   = LinearLayoutManager(this)
+
+    override fun showEmptySearchToast() = Toast.makeText(this,"No search param added!",Toast.LENGTH_SHORT).show()
 }
