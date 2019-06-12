@@ -31,17 +31,11 @@ class MainListFragment : Fragment() {
 
 //        Log.d("CUSTOM",imdbID)
 
-        movieInfoViewModel.getMovieById(imdbID).observe(this, Observer {
-            if(it == null){
-                if(activityHelper.internetIsAvailable()){
-                    movieInfoViewModel.retreiveMovie(imdbID)
-                }
-                else activityHelper.showToast("No internet connection!!")
-            }
-            else{
-                Log.d("CUSTOM",it.Title)
-            }
-        })
+        if(activityHelper.internetIsAvailable()){
+            movieInfoViewModel.retreiveMovie(imdbID)
+        }
+        else activityHelper.showToast("No internet connection!!")
+
     }
     override fun onAttach(context: Context) {
         super.onAttach(context)
