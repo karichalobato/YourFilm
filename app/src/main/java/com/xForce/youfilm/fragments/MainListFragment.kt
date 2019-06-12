@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.xForce.youfilm.R
 import com.xForce.youfilm.activities.ActivityHelper
 import com.xForce.youfilm.adapters.MovieAdapter
-import com.xForce.youfilm.database.entities.Movie
 import com.xForce.youfilm.viewModel.MovieViewModel
 
 class MainListFragment : Fragment() {
@@ -29,13 +28,20 @@ class MainListFragment : Fragment() {
     lateinit var btnSearch: Button
 
     val clickListener = fun(view: View, imdbID: String) {
-        try {
-//            val nextAction = MovieListFragmentDirections.nextAction()
-//            nextAction.imdbId = imdbID
-//            view.findNavController().navigate(nextAction)
-        } catch (e: Exception) {
-            Log.e("CUSTOM", e.toString())
-        }
+
+//        Log.d("CUSTOM",imdbID)
+
+        movieInfoViewModel.getMovieById(imdbID).observe(this, Observer {
+            if(it == null){
+                if(activityHelper.internetIsAvailable()){
+                    movieInfoViewModel.retreiveMovie(imdbID)
+                }
+                else activityHelper.showToast("No internet connection!!")
+            }
+            else{
+                Log.d("CUSTOM",it.Title)
+            }
+        })
     }
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -74,7 +80,7 @@ class MainListFragment : Fragment() {
 
         btnSearch.setOnClickListener {
             var searchParam = tvSearch.text
-            if(searchParam.isEmpty()) activityHelper.showEmptySearchToast()
+            if(searchParam.isEmpty()) activityHelper.showToast("No search params added!")
             else{
                 searchParam = addChar(searchParam.toString(),'%',0)
                 searchParam = addChar(searchParam.toString(),'%',searchParam.toString().length)

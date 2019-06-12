@@ -18,5 +18,9 @@ class MovieRepository (private val movieDao: MovieDAO ) {
     suspend fun deleteMovies() = movieDao.deleteMovies()
 
     @WorkerThread
-    suspend fun insertMovie(movie: Movie) = movieDao.deleteMovies()
+    suspend fun insertMovie(movie: Movie) = movieDao.insertMovie(movie)
+
+    @WorkerThread
+    suspend fun deleteMovie(imdbID:String) = movieDao.deleteMovie(imdbID)
+
 }

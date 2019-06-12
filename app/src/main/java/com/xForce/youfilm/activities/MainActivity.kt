@@ -1,5 +1,8 @@
 package com.xForce.youfilm.activities
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.FrameLayout
@@ -10,9 +13,12 @@ import com.xForce.youfilm.R
 import com.xForce.youfilm.fragments.MainListFragment
 
 class MainActivity : AppCompatActivity(),ActivityHelper {
+    override fun internetIsAvailable():Boolean {
 
-
-    var listaFragment = MainListFragment()
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
+        return activeNetwork!!.isConnected
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,5 +27,5 @@ class MainActivity : AppCompatActivity(),ActivityHelper {
     }
     override fun getLayoutManager(): RecyclerView.LayoutManager   = LinearLayoutManager(this)
 
-    override fun showEmptySearchToast() = Toast.makeText(this,"No search param added!",Toast.LENGTH_SHORT).show()
+    override fun showToast(msg:String) = Toast.makeText(this,msg,Toast.LENGTH_SHORT).show()
 }

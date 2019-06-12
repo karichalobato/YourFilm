@@ -21,8 +21,8 @@ class MovieViewModel(app: Application) : AndroidViewModel(app) {
     //private lateinit var scope: CoroutineScope
 
     init {
-        val movieDAO = MovieRoomDatabase.getDatabase(app).movieDao()
-        val movieInfoDao = MovieRoomDatabase.getDatabase(app).movieInfoDao()
+        val movieDAO = MovieRoomDatabase.getDatabase(app,viewModelScope).movieDao()
+        val movieInfoDao = MovieRoomDatabase.getDatabase(app,viewModelScope).movieInfoDao()
 
 
         movieRepository = MovieRepository(movieDAO)
@@ -40,14 +40,14 @@ class MovieViewModel(app: Application) : AndroidViewModel(app) {
                 with(response) {
                     this.body()?.results?.forEach {
                         insertMovieInfo(it)
-                        val movieResponse =
+                        /*val movieResponse =
                             MovieService.getMovieService().retreiveMovieById(it.imdbID, MovieService.API_KEY).await()
                         if (movieResponse.isSuccessful) {
                             with(movieResponse) {
                                 //                                    Log.d("CUSTOM",this.body()!!.Plot)
                                 movieRepository.insertMovie(this.body()!!)
                             }
-                        }
+                        }*/
                     }
                 }
             } else Log.d("CUSTOM", "shit")
@@ -60,6 +60,20 @@ class MovieViewModel(app: Application) : AndroidViewModel(app) {
 //        }
 
     }
+
+
+    fun retreiveMovie(imdbID:String) = viewModelScope.launch (Dispatchers.IO){
+
+        val response = MovieService.getMovieService().retreiveMovieById(imdbID, MovieService.API_KEY).await()
+        if(response.isSuccessful){
+            with(response){
+                val id = movieRepository.insertMovie(this.body()!!)
+                Log.d("CUSTOM",id.toString())
+            }
+        }
+
+    }
+
 
     fun getAllMovieInfo() = movieInfoRepository.getAllMovieInfo()
 
@@ -77,5 +91,9 @@ class MovieViewModel(app: Application) : AndroidViewModel(app) {
         movieInfoRepository.insertMovieInfo(movieInfo)
     }
 
+
+    fun deleteMovie(imdbID: String) = viewModelScope.launch (Dispatchers.IO){
+        movieRepository.deleteMovie(imdbID)
+    }
 
 }
