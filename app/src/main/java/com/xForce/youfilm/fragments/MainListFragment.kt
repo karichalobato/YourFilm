@@ -36,10 +36,10 @@ class MainListFragment : Fragment() {
 
         if(activityHelper.internetIsAvailable()){
 
-            if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT){
+//            if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT){
                 val nextAction = MainListFragmentDirections.nextAction(imdbID)
                 view.findNavController().navigate(nextAction)
-            }
+//            }
         }
 
         else activityHelper.showToast("No internet connection!!")
@@ -53,6 +53,10 @@ class MainListFragment : Fragment() {
         super.onAttach(context)
         activityHelper = context as ActivityHelper
     }
+
+
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -80,8 +84,9 @@ class MainListFragment : Fragment() {
                 /*
                   TODO: Verificar si tiene internet
                 * */
-                movieInfoViewModel.retreiveAllMovieList()
+                movieInfoViewModel.retreiveAllMovieList("")
             } else {
+                Log.d("CUSTOM","elese")
                 movieInfoAdapter.setData(it)
             }
 
@@ -94,9 +99,12 @@ class MainListFragment : Fragment() {
                 searchParam = addChar(searchParam.toString(),'%',0)
                 searchParam = addChar(searchParam.toString(),'%',searchParam.toString().length)
 //                Log.d("CUSTOM",searchParam)
-                movieInfoViewModel.getMoviesByTittle(searchParam.toString()).observe(this, Observer {
+                /*movieInfoViewModel.getMoviesByTittle(searchParam.toString()).observe(this, Observer {
                     movieInfoAdapter.setData(it)
-                })
+                })*/
+                movieInfoViewModel.retreiveAllMovieList(searchParam)
+
+
             }
         }
 

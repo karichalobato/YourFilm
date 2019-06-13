@@ -35,7 +35,7 @@ public abstract class MovieRoomDatabase : RoomDatabase() {
                 val instance = Room
                         .databaseBuilder(context, MovieRoomDatabase::class.java, "Movie_Database")
                         .fallbackToDestructiveMigration()
-                        .addCallback(RoomDBCallback(scope))
+//                        .addCallback(RoomDBCallback(scope))
                         .build()
                 INSTANCE = instance
                 return instance

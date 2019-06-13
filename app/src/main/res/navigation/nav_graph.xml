@@ -10,8 +10,8 @@
         android:label="movies_list_fragment"
         tools:layout="@layout/movies_list_fragment">
         <action
-            android:id="@+id/next_action"
-            app:destination="@id/destination_movie" />
+                android:id="@+id/next_action"
+                app:destination="@id/destination_movie" app:popUpTo="@+id/destination_main"/>
     </fragment>
     <fragment
         android:id="@+id/destination_movie"

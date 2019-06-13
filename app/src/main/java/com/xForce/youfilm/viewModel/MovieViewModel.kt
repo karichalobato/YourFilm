@@ -33,11 +33,15 @@ class MovieViewModel(app: Application) : AndroidViewModel(app) {
         listenedMovie = movieRepository.getAllMovies()
     }
 
-    fun retreiveAllMovieList() = viewModelScope.launch(Dispatchers.IO) {
+    fun retreiveAllMovieList(filter:String) = viewModelScope.launch(Dispatchers.IO) {
         //        Log.d("CUSTOM","called")
         try {
+            movieInfoRepository.deleteAllMovieInfo()
+            movieRepository.deleteMovies()
+
+
             val response =
-                MovieService.getMovieService().retreiveAllMovies("Spider-Man", "movie", 1, MovieService.API_KEY).await()
+                MovieService.getMovieService().retreiveAllMovies(filter, "movie", 1, MovieService.API_KEY).await()
             if (response.isSuccessful) {
 
                 with(response) {
