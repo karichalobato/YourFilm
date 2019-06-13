@@ -7,5 +7,7 @@
     <color name="colorContent">#333333</color>
     <color name="colorAccent">#00cca3</color>
     <color name="colorText">#ffffff</color>
+    <color name="colorButton">#B40404</color>
+    <color name="colorTextB">#D8D8D8</color>
 
 </resources>
