@@ -11,15 +11,21 @@ import com.xForce.youfilm.database.entities.Movie
 interface MovieDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMovie(movie: Movie)
+    suspend fun insertMovie(movie: Movie):Long
 
-    //TODO BUSQUEDA POR TITULO DE PELICULA
     @Query("SELECT * FROM Movie WHERE title==:title")
     fun getMovieByTitle(title:String): LiveData<List<Movie>>
 
-    @Query("SELECT * FROM Movie")
-    fun getAllMovies():LiveData<List<Movie>>
+    @Query("select * from movie")
+    fun getAllMovies():LiveData<Movie>
+
+    @Query("select * from movie where imdbID = :id")
+    fun getMovieById(id:String):LiveData<Movie>
+
 
     @Query("DELETE FROM Movie")
     fun deleteMovies()
+
+    @Query("delete from movie where imdbID = :imdbID")
+    suspend fun deleteMovie(imdbID:String)
 }
